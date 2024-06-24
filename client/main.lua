@@ -135,7 +135,7 @@ function StartItemCraft(recipe, craftLocId)
         ItemProp = CreateObject(Config.CraftLocs[craftLocId].recipes[recipe].model, Config.CraftLocs[craftLocId].coords
         .x, Config.CraftLocs[craftLocId].coords.y, Config.CraftLocs[craftLocId].coords.z - 0.05, true, false, false)
     end
-    lib.callback("HP-Crafting:server:StartedCraft", false, function()
+    lib.callback("sharky_crafting:server:StartedCraft", false, function()
     end, Config.CraftLocs[craftLocId].recipes[recipe], cache.coords)
 
     Wait(200)
@@ -156,7 +156,7 @@ function StartItemCraft(recipe, craftLocId)
             }
         }) then
         FreezeEntityPosition(cache.ped, false)
-        lib.callback("HP-Crafting:server:CraftItem", false, function()
+        lib.callback("sharky_crafting:server:CraftItem", false, function()
         end, Config.CraftLocs[craftLocId].recipes[recipe], cache.coords)
 
         if ItemProp then
@@ -165,7 +165,7 @@ function StartItemCraft(recipe, craftLocId)
         isCrafting = false
     else
         FreezeEntityPosition(cache.ped, false)
-        lib.callback("HP-Crafting:server:StoppedCraft", false, function()
+        lib.callback("sharky_crafting:server:StoppedCraft", false, function()
         end, Config.CraftLocs[craftLocId].recipes[recipe], cache.coords)
         if ItemProp then
             DeleteEntity(ItemProp)

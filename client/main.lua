@@ -1,7 +1,7 @@
 local props, isCrafting = {}, false
 
 CreateThread(function()
-    for k, v in pairs(Config.CraftLocs) do
+    for k, v in pairs(Config.Locations) do
         lib.requestModel(v.propModel, 10000)
         local craftTable = CreateObject(v.propModel, v.coords.x, v.coords.y, v.coords.z, false, false, false)
         props[props] = props
@@ -9,6 +9,8 @@ CreateThread(function()
         Wait(2000)
         PlaceObjectOnGroundProperly(craftTable)
         PlaceObjectOnGroundProperly_2(craftTable)
+        SetEntityAsMissionEntity(craftTable, true, true)
+        FreezeEntityPosition(craftTable, true)
 
         local CraftPoint = lib.points.new({
             coords = v.coords.xyz,
@@ -16,11 +18,30 @@ CreateThread(function()
         })
 
 
-        function CraftPoint:nearby()
-            if self.currentDistance < 2 and not isCrafting then
-                ESX.ShowHelpNotification(_U('open_craft'))
-                if IsControlJustReleased(0, 38) then
-                    OpenCraft(k)
+        if Config.Target then
+            exports.ox_target:addSphereZone({
+                coords = v.coords.xyz,
+                size = vec3(2, 2, 2),
+                rotation = 45,
+                debug = false,
+                options = {
+                    {
+                        name = "target",
+                        icon = v.Target.icon,
+                        label = v.Target.title,
+                        onSelect = function()
+                            OpenCraft(k)
+                        end
+                    }
+                }
+            })
+        else
+            function CraftPoint:nearby()
+                if self.currentDistance < 2 and not isCrafting then
+                    ESX.ShowHelpNotification(_U('open_craft'))
+                    if IsControlJustReleased(0, 38) then
+                        OpenCraft(k)
+                    end
                 end
             end
         end
@@ -45,7 +66,7 @@ end
 
 function OpenCraft(craftLocId)
     local CraftOptions = {}
-    for k, v in pairs(Config.CraftLocs[craftLocId].recipes) do
+    for k, v in pairs(Config.Locations[craftLocId].crafts) do
         local PlayerItems = {}
         local CraftMetadata = {
             {
@@ -62,10 +83,10 @@ function OpenCraft(craftLocId)
 
             if exports.ox_inventory:GetItemCount(v.requiredItems[i].name) < v.requiredItems[i].amount then
                 itemamounttext = exports.ox_inventory:GetItemCount(v.requiredItems[i].name) ..
-                "/" .. v.requiredItems[i].amount .. "db *"
+                    "/" .. v.requiredItems[i].amount .. " *"
             else
                 itemamounttext = exports.ox_inventory:GetItemCount(v.requiredItems[i].name) ..
-                "/" .. v.requiredItems[i].amount .. "db"
+                    "/" .. v.requiredItems[i].amount .. ""
             end
             CraftMetadata[#CraftMetadata + 1] = {
                 label = " - " .. v.requiredItems[i].label,
@@ -93,9 +114,10 @@ function OpenCraft(craftLocId)
         }
     end
 
+
     lib.registerContext({
         id = 'CraftMenu',
-        title = _('craft_menu'),
+        title = Config.Locations[craftLocId].menuTitle,
         options = CraftOptions
     })
     lib.showContext('CraftMenu')
@@ -104,11 +126,11 @@ end
 function OpenAdvancedOptions(recipe, craftLocId)
     lib.registerContext({
         id = 'AdvancedOptions',
-        title = Config.CraftLocs[craftLocId].recipes[recipe].label,
+        title = Config.Locations[craftLocId].crafts[recipe].label,
         menu = 'CraftMenu',
         options = {
             {
-                title = _U('craft_item', Config.CraftLocs[craftLocId].recipes[recipe].label)
+                title = _U('craft_item', Config.Locations[craftLocId].crafts[recipe].label)
             },
             {
                 title = _U('yes'),
@@ -130,26 +152,23 @@ function StartItemCraft(recipe, craftLocId)
     FreezeEntityPosition(cache.ped, false)
     FreezeEntityPosition(cache.ped, true)
     local ItemProp = nil
-    if type(Config.CraftLocs[craftLocId].recipes[recipe].model) == "string" or type(Config.CraftLocs[craftLocId].recipes[recipe].model) == "integer" then
-        lib.requestModel(Config.CraftLocs[craftLocId].recipes[recipe].model)
-        ItemProp = CreateObject(Config.CraftLocs[craftLocId].recipes[recipe].model, Config.CraftLocs[craftLocId].coords
-        .x, Config.CraftLocs[craftLocId].coords.y, Config.CraftLocs[craftLocId].coords.z - 0.05, true, false, false)
+    if type(Config.Locations[craftLocId].crafts[recipe].model) == "string" or type(Config.Locations[craftLocId].crafts[recipe].model) == "integer" then
+        lib.requestModel(Config.Locations[craftLocId].crafts[recipe].model)
+        ItemProp = CreateObject(Config.Locations[craftLocId].crafts[recipe].model, Config.Locations[craftLocId].coords.x,
+            Config.Locations[craftLocId].coords.y, Config.Locations[craftLocId].coords.z - 0.05, true, false, false)
     end
     lib.callback("sharky_crafting:server:StartedCraft", false, function()
-    end, Config.CraftLocs[craftLocId].recipes[recipe], cache.coords)
+    end, Config.Locations[craftLocId].crafts[recipe], cache.coords)
 
     Wait(200)
     -- PlaceObjectOnGroundProperly_2(ItemProp)
 
 
     if lib.progressBar({
-            duration = Config.CraftLocs[craftLocId].recipes[recipe].duration * 1000,
+            duration = Config.Locations[craftLocId].crafts[recipe].duration * 1000,
             label = _U('crafting'),
             useWhileDead = false,
             canCancel = false,
-            disable = {
-                car = true,
-            },
             anim = {
                 dict = "anim@amb@nightclub@djs@dixon@",
                 clip = "dixn_end_dix",
@@ -157,7 +176,7 @@ function StartItemCraft(recipe, craftLocId)
         }) then
         FreezeEntityPosition(cache.ped, false)
         lib.callback("sharky_crafting:server:CraftItem", false, function()
-        end, Config.CraftLocs[craftLocId].recipes[recipe], cache.coords)
+        end, Config.Locations[craftLocId].crafts[recipe], cache.coords)
 
         if ItemProp then
             DeleteEntity(ItemProp)
@@ -166,7 +185,7 @@ function StartItemCraft(recipe, craftLocId)
     else
         FreezeEntityPosition(cache.ped, false)
         lib.callback("sharky_crafting:server:StoppedCraft", false, function()
-        end, Config.CraftLocs[craftLocId].recipes[recipe], cache.coords)
+        end, Config.Locations[craftLocId].crafts[recipe], cache.coords)
         if ItemProp then
             DeleteEntity(ItemProp)
         end

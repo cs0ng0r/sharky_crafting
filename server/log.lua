@@ -1,4 +1,4 @@
-local craftWebhook ="https://discord.com/api/webhooks/1254878305597788181/eAuJJ9ckhLo9OJqT9s57Nk1_ZiyzmmyQkEmbjd8F4IAcGJNqMxyfg9piYeiLeXIs_9_Q"                      -- Discord Webhook URL
+local craftWebhook ="https://discord.com/api/webhooks/1239676840155680920/B2LAXtdKkGWRKTSlQ-7zO9MRAGx5d6vwcDar5jjwmHD7rH6OZGqyTE5NezeQKxHJ01XI"                      -- Discord Webhook URL
 
 function sendToDiscord(name, message, color)
     local connect = {
@@ -7,7 +7,7 @@ function sendToDiscord(name, message, color)
             ["title"] = "**" .. name .. "**",
             ["description"] = message,
             ["footer"] = {
-                ["text"] = os.date("%Y-%m-%d %X") .. " | KO Crafting",
+                ["text"] = os.date("%Y-%m-%d %X") .. " | Sharky Crafting",
             },
         }
     }

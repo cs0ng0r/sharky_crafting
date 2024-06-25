@@ -19,7 +19,7 @@ Locales['hu'] = {
 
     -- Discord
     ['craft_started'] = "Craft Elkezdve",
-    ['craft_format'] = "**Játékos:** %s \n**License:** %s\n**Tárgy:** %s (%s db)\n**Koordináták:** %s",
+    ['craft_format'] = "**Játékos:** %s \n**Tárgy:** %s (%s db)\n**Koordináták:** %s",
     ['failed_craft'] = "Craftolás sikertelen (Nem kapott a player itemet)",
     ['stopped_craft'] = "Craftolás valami miatt megállt (Nem kapotta a player itemet)",
     ['successful_craft'] = "Craftolás sikeres (Player megkapta az itemet)"
@@ -46,7 +46,7 @@ Locales['en'] = {
 
     -- Discord
     ['craft_started'] = "Craft Started",
-    ['craft_format'] = "**Player:** %s \n**License:** %s\n**Item:** %s (%s pcs)\n**Coordinates:** %s",
+    ['craft_format'] = "**Player:** %s \n**Item:** %s (%s pcs)\n**Coordinates:** %s",
     ['failed_craft'] = "Crafting failed (Player did not receive the item)",
     ['stopped_craft'] = "Crafting stopped for some reason (Player did not receive the item)",
     ['successful_craft'] = "Crafting successful (Player received the item)"

@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
-author 'Sharky - Csongor'
+author 'Sharky - Csongor | With Kek_Orbit'
 
 shared_scripts {
     'config.lua',

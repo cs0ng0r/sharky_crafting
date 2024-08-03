@@ -161,7 +161,6 @@ function StartItemCraft(recipe, craftLocId)
     end, Config.Locations[craftLocId].crafts[recipe], cache.coords)
 
     Wait(200)
-    -- PlaceObjectOnGroundProperly_2(ItemProp)
 
 
     if lib.progressBar({

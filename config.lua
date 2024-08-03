@@ -29,21 +29,21 @@ Config.Locations = {
     },
     [2] = {
         coords = vector4(258.2780, -795.8275, 55.2244, 110.2932),
-        propModel = "prop_tool_bench02_ld",
+        propModel = "prop_rub_table_02",
         menuTitle = "Weed Processing",
         Target = {
-            title = "Crafting",
-            icon = "fas fa-gun"
+            title = "Drog csomagolás",
+            icon = "fas fa-weed"
         },
         crafts = {
             {
-                item = "weapon_snspistol",
-                model = "w_pi_sns_pistol", -- https://gtahash.ru/?c=Weapon%20models
-                label = "SNS Pistol",
+                item = "marijuana",
+                model = "prop_drug_package_02", -- https://gtahash.ru/?c=Weapon%20models
+                label = "Csomagol Marijuana",
                 amount = 1,
                 duration = 5, -- seconds
                 requiredItems = {
-                    { name = "iron", label = "Iron", amount = 10 },
+                    { name = "cannabis", label = "Cannabis", amount = 10 },
                 }
             },
         }
